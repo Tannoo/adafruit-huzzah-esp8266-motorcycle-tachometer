@@ -1,6 +1,7 @@
 #include <Adafruit_NeoPixel.h>
-#define PIN            6  //LED Data Pin
-#define NUMPIXELS      8  //number of leds connected
+#define PIN        12  //LED Data Pin
+#define NUMPIXELS  20  //number of leds connected
+#define BRIGHTNESS 10
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -78,113 +79,114 @@ void setup() {
 
 void loop() {
 
-    float ighigh, iglow;
-    unsigned long igcal1, igcal2;
+  float ighigh, iglow;
+  unsigned long igcal1, igcal2;
 
-    //measure period of tach signal
-    /*ighigh = pulseIn(tachPin, HIGH);
-    iglow = pulseIn(tachPin, LOW);
+  //measure period of tach signal
+  /*ighigh = pulseIn(tachPin, HIGH);
+  iglow = pulseIn(tachPin, LOW);
 
-    igcal1 = 1000 / ((ighigh / 1000) + (iglow / 1000));
+  igcal1 = 1000 / ((ighigh / 1000) + (iglow / 1000));
 
-    //do it again
-    ighigh = pulseIn(tachPin, HIGH);
-    iglow = pulseIn(tachPin, LOW);
+  //do it again
+  ighigh = pulseIn(tachPin, HIGH);
+  iglow = pulseIn(tachPin, LOW);
 
-    igcal2 = 1000 / ((ighigh / 1000) + (iglow / 1000));*/
+  igcal2 = 1000 / ((ighigh / 1000) + (iglow / 1000));*/
 
-    Serial.println("start loop");
+  Serial.println("start loop");
 
-    if (start == true) {
-        for (int s = 0; s < arr_size; s++)
-        {
-            if ((count < arr_size)&&(s != arr_size)) {
-                igfreq = drive[s];
-                Serial.println("iter: " + String(s) + " igfreq: " + String(igfreq));
+  if (start == true) {
+    for (int s = 0; s < arr_size; s++) {
+      if ((count < arr_size)&&(s != arr_size)) {
+        igfreq = drive[s];
+        Serial.println("iter: " + String(s) + " igfreq: " + String(igfreq));
 
-                if (hasStartupSequenceRun == false) {
-                    //if (igfreq > onFrequency) {
-                        //    //run start sequence
-                        //    //LEDs will light up, flash and light out upon starting the engine.
-                        //    for (int i = 0; i < NUMPIXELS; ++i) {
-                        //        pixels.setPixelColor(i, tachColor[i]);
-                        //        pixels.show();
-                        //        delay(50);
-                        //    }
-                        //    for (int a = 0; a < 10; a++) {
-                        //        pixels.fill(pixels.Color(0, 0, 120));
-                        //        pixels.show();
-                        //        delay(20);
-                        //        pixels.fill(pixels.Color(0, 0, 0));
-                        //        pixels.show();
-                        //        delay(20);
-                        //    }
-                        //    for (int i = 0; i < NUMPIXELS; ++i) {
-                        //        pixels.setPixelColor(i, tachColor[i]);
-                        //        pixels.show();
-                        //    }
-                        //    for (int i = NUMPIXELS - 1; i >= 0; --i) {
-                        //        pixels.setPixelColor(i, pixels.Color(0, 0, 0));
-                        //        pixels.show();
-                        //        delay(50);
-                        //    }
-                        //    hasStartupSequenceRun = true;
-                        //    pixels.fill(pixels.Color(0, 0, 0));
-                        //    pixels.show();
-                        //}
-                        //if (igfreq < onFrequency) {
-                        //    //resets hasStartupSequenceRun to false if engine stops but Arduino remains powered, 
-                        //    //startupsequence will rerun upon restarting the engine
-                        //    hasStartupSequenceRun = false;
-                        //}
-
-                    if (igfreq < maxFrequency) {
-
-                        // normal operating range
-                        for (int i = 0; i < NUMPIXELS; ++i) {
-                            if (igfreq > lightShiftFreq[i]) {
-                                pixels.setPixelColor(i, tachColor[i]);
-                            }
-                            else {
-                                pixels.setPixelColor(i, pixels.Color(0, 0, 0));
-                            }
-                        }
-                        pixels.show();
-                    }
-                    else if (igfreq >= maxFrequency && igfreq < shiftFrequency) {
-                        //shift flash
-                        //default color=blue
-                        //to change shift flash color, edit RGB value in following line
-                        pixels.fill(pixels.Color(0, 0, 120));
-                        pixels.show();
-                        delay(20);
-                        pixels.fill(pixels.Color(0, 0, 0));
-                        pixels.show();
-                        delay(20);
-                    }
-                    else if (igfreq >= shiftFrequency) {
-                        //overrev flash
-                        //default color=red
-                        //to change overrev flash color, edit RGB value in following line
-                        pixels.fill(pixels.Color(120, 0, 0));
-                        pixels.show();
-                        delay(20);
-                        pixels.fill(pixels.Color(0, 0, 0));
-                        pixels.show();
-                        delay(20);
-                    }
-                }
-                delay(100);
+        if (hasStartupSequenceRun == false) {
+          /*
+          //if (igfreq > onFrequency) {
+              // Run start sequence
+              // LEDs will light up, flash and light out upon starting the engine.
+              for (int i = 0; i < NUMPIXELS; ++i) {
+                pixels.setPixelColor(i, tachColor[i]);
+                pixels.show();
+                delay(50);
+              }
+              for (int a = 0; a < 10; a++) {
+                pixels.fill(pixels.Color(0, 0, 120));
+                pixels.show();
+                delay(20);
+                pixels.fill(pixels.Color(0, 0, 0));
+                pixels.show();
+                delay(20);
+              }
+              for (int i = 0; i < NUMPIXELS; ++i) {
+                pixels.setPixelColor(i, tachColor[i]);
+                pixels.show();
+              }
+              for (int i = NUMPIXELS - 1; i >= 0; --i) {
+                pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+                pixels.show();
+                delay(50);
+              }
+              hasStartupSequenceRun = true;
+              pixels.fill(pixels.Color(0, 0, 0));
+              pixels.show();
             }
-            else {
-                start = false;
-                igfreq = 0;
-                Serial.println("break");
-                break;
+            if (igfreq < onFrequency) {
+              // Resets hasStartupSequenceRun to false if engine stops but Arduino remains powered, 
+              // Startupsequence will rerun upon restarting the engine
+              hasStartupSequenceRun = false;
+          }
+          */
+
+          if (igfreq < maxFrequency) {
+
+            // Normal operating range
+            for (int i = 0; i < NUMPIXELS; ++i) {
+              if (igfreq > lightShiftFreq[i]) {
+              pixels.setPixelColor(i, tachColor[i]);
+              }
+              else {
+                pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+              }
             }
-            count++;
+            pixels.show();
+          }
+          else if (igfreq >= maxFrequency && igfreq < shiftFrequency) {
+            // Shift flash
+            // Default color=blue
+            // To change shift flash color, edit RGB value in following line
+            pixels.fill(pixels.Color(0, 0, 120));
+            pixels.show();
+            delay(20);
+            pixels.fill(pixels.Color(0, 0, 0));
+            pixels.show();
+            delay(20);
+          }
+          else if (igfreq >= shiftFrequency) {
+            // Overrev flash
+            // Default color=red
+            // To change overrev flash color, edit RGB value in following line
+            pixels.fill(pixels.Color(120, 0, 0));
+            pixels.show();
+            delay(20);
+            pixels.fill(pixels.Color(0, 0, 0));
+            pixels.show();
+            delay(20);
+          }
         }
+        delay(100);
+      }
+      else {
+        start = false;
+        igfreq = 0;
+        Serial.println("break");
+        break;
+      }
+      count++;
     }
-    pixels.fill(pixels.Color(0, 0, 0));
-    pixels.show();
- }
+  }
+  pixels.fill(pixels.Color(0, 0, 0));
+  pixels.show();
+}
